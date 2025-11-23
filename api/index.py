@@ -10,7 +10,6 @@ from pathlib import Path
 import imageio_ffmpeg
 from pydub import AudioSegment
 AudioSegment.converter = imageio_ffmpeg.get_ffmpeg_exe()
-print(f"Using FFmpeg binary from: {AudioSegment.converter}")
 
 from api.audio_processor import AudioProcessor
 
@@ -39,7 +38,7 @@ def get_processor():
         _processor = AudioProcessor()
     return _processor
 
-@app.post("/")
+@app.post("/api/process")
 async def process_audio(
     file: UploadFile = File(...),
     padding: int = Form(150),
@@ -75,3 +74,6 @@ async def process_audio(
 @app.get("/")
 def read_root():
     return {"message": "SmoothFlow API is running"}
+
+# Vercel serverless handler
+handler = app
