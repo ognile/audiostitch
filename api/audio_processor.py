@@ -7,14 +7,8 @@ import urllib.request
 
 class AudioProcessor:
     def __init__(self):
-        # Download model to /tmp (only writable dir on Vercel)
-        model_path = "/tmp/silero_vad.onnx"
-        
-        if not os.path.exists(model_path):
-            print("Downloading Silero VAD model...")
-            url = "https://github.com/snakers4/silero-vad/raw/master/files/silero_vad.onnx"
-            urllib.request.urlretrieve(url, model_path)
-        
+        # Use model from repo (works locally and on Vercel)
+        model_path = os.path.join(os.path.dirname(__file__), "silero_vad.onnx")
         self.session = onnxruntime.InferenceSession(model_path)
         self._state = np.zeros((2, 1, 128)).astype('float32')
 
