@@ -39,7 +39,7 @@ def get_processor():
         _processor = AudioProcessor()
     return _processor
 
-@app.post("/process")
+@app.post("/")
 async def process_audio(
     file: UploadFile = File(...),
     padding: int = Form(150),
