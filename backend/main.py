@@ -23,8 +23,16 @@ TEMP_DIR = Path("temp")
 TEMP_DIR.mkdir(exist_ok=True)
 
 # Check for FFmpeg
-if not shutil.which("ffmpeg"):
-    print("WARNING: FFmpeg not found! Audio processing will fail.")
+if shutil.which("ffmpeg"):
+    print("FFmpeg found in system path.")
+else:
+    # Check for local ffmpeg binary (common in some deployments)
+    local_ffmpeg = Path("ffmpeg")
+    if local_ffmpeg.exists():
+        print("Found local ffmpeg binary.")
+        AudioSegment.converter = str(local_ffmpeg.absolute())
+    else:
+        print("WARNING: FFmpeg not found! Audio processing will fail.")
 
 processor = AudioProcessor()
 
