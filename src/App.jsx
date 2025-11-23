@@ -33,7 +33,7 @@ function App() {
     formData.append('crossfade', crossfade);
 
     try {
-      const response = await axios.post('http://localhost:8000/process', formData, {
+      const response = await axios.post('/api/process', formData, {
         responseType: 'blob',
       });
 
