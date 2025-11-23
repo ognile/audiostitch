@@ -22,17 +22,12 @@ app.add_middleware(
 TEMP_DIR = Path("temp")
 TEMP_DIR.mkdir(exist_ok=True)
 
-# Check for FFmpeg
-if shutil.which("ffmpeg"):
-    print("FFmpeg found in system path.")
-else:
-    # Check for local ffmpeg binary (common in some deployments)
-    local_ffmpeg = Path("ffmpeg")
-    if local_ffmpeg.exists():
-        print("Found local ffmpeg binary.")
-        AudioSegment.converter = str(local_ffmpeg.absolute())
-    else:
-        print("WARNING: FFmpeg not found! Audio processing will fail.")
+import imageio_ffmpeg
+
+# Configure Pydub to use imageio-ffmpeg's binary
+# This works cross-platform (local Mac, Vercel Linux) automatically
+AudioSegment.converter = imageio_ffmpeg.get_ffmpeg_exe()
+print(f"Using FFmpeg binary from: {AudioSegment.converter}")
 
 processor = AudioProcessor()
 
