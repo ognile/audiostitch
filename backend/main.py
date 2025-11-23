@@ -6,6 +6,7 @@ import os
 import uuid
 from pathlib import Path
 from audio_processor import AudioProcessor
+from pydub import AudioSegment
 
 app = FastAPI()
 
