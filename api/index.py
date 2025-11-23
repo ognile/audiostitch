@@ -19,8 +19,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Ensure temp directory exists
-TEMP_DIR = Path("temp")
+# Ensure temp directory exists (use /tmp for serverless environments)
+TEMP_DIR = Path("/tmp")
 TEMP_DIR.mkdir(exist_ok=True)
 
 import imageio_ffmpeg
