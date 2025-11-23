@@ -30,7 +30,15 @@ import imageio_ffmpeg
 AudioSegment.converter = imageio_ffmpeg.get_ffmpeg_exe()
 print(f"Using FFmpeg binary from: {AudioSegment.converter}")
 
-processor = AudioProcessor()
+
+# Lazy initialization to avoid cold start overhead
+_processor = None
+
+def get_processor():
+    global _processor
+    if _processor is None:
+        _processor = AudioProcessor()
+    return _processor
 
 @app.post("/process")
 async def process_audio(
@@ -43,7 +51,7 @@ async def process_audio(
         file_bytes = await file.read()
         
         # Process
-        processed_audio = processor.process_audio(
+        processed_audio = get_processor().process_audio(
             file_bytes, 
             padding_ms=padding, 
             crossfade_ms=crossfade
