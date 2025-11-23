@@ -5,8 +5,14 @@ import shutil
 import os
 import uuid
 from pathlib import Path
-from api.audio_processor import AudioProcessor
+
+# Configure FFmpeg BEFORE importing Pydub
+import imageio_ffmpeg
 from pydub import AudioSegment
+AudioSegment.converter = imageio_ffmpeg.get_ffmpeg_exe()
+print(f"Using FFmpeg binary from: {AudioSegment.converter}")
+
+from api.audio_processor import AudioProcessor
 
 app = FastAPI()
 
@@ -22,13 +28,6 @@ app.add_middleware(
 # Ensure temp directory exists (use /tmp for serverless environments)
 TEMP_DIR = Path("/tmp")
 TEMP_DIR.mkdir(exist_ok=True)
-
-import imageio_ffmpeg
-
-# Configure Pydub to use imageio-ffmpeg's binary
-# This works cross-platform (local Mac, Vercel Linux) automatically
-AudioSegment.converter = imageio_ffmpeg.get_ffmpeg_exe()
-print(f"Using FFmpeg binary from: {AudioSegment.converter}")
 
 
 # Lazy initialization to avoid cold start overhead
