@@ -67,7 +67,10 @@ async def process_audio(
         return FileResponse(filepath, media_type="audio/mpeg", filename="processed.mp3")
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import traceback
+        error_detail = f"{str(e)}\n\nTraceback:\n{traceback.format_exc()}"
+        print(f"ERROR in process_audio: {error_detail}")
+        raise HTTPException(status_code=500, detail=error_detail)
 
 @app.get("/")
 def read_root():
