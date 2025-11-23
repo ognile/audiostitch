@@ -6,8 +6,16 @@ import os
 
 class AudioProcessor:
     def __init__(self):
-        # Load ONNX model
+        # Download model if not present (avoids git binary corruption)
         model_path = os.path.join(os.path.dirname(__file__), "silero_vad.onnx")
+        
+        if not os.path.exists(model_path):
+            import urllib.request
+            print("Downloading Silero VAD ONNX model...")
+            url = "https://github.com/snakers4/silero-vad/raw/master/files/silero_vad.onnx"
+            urllib.request.urlretrieve(url, model_path)
+            print(f"Model downloaded to {model_path}")
+        
         self.session = onnxruntime.InferenceSession(model_path)
         self.reset_state()
 
